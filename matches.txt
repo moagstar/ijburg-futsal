@@ -1,0 +1,5 @@
+# Add new matches at the top. Leave a blank line between matches.
+
+2026-08-26
+Red (5): Mattia, Marcos, Alex Smorodin, Robin Schreur, Hassan El Azzouzi, Tiago Vieira
+Blue (5): Iarik, samwijnans, Randy Bukasa, André Alves, Fatih Karagoz, Maurizio Perino

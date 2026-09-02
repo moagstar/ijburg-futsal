@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f5f4">
+    <meta name="description" content="Weekly results, teams and player standings for IJburg Futsal.">
+    <title>IJburg Futsal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="IJburg Futsal home">
+        <h1>IJburg Futsal</h1>
+      </a>
+      <nav class="tabs" aria-label="League views" role="tablist">
+        <button id="standings-tab" type="button" role="tab" aria-selected="true" aria-controls="standings" data-tab="standings">Standings</button>
+        <button id="results-tab" type="button" role="tab" aria-selected="false" aria-controls="results" data-tab="results" tabindex="-1">Results</button>
+        <button id="together-tab" type="button" role="tab" aria-selected="false" aria-controls="together" data-tab="together" tabindex="-1">Together</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section tab-panel" id="standings" role="tabpanel" aria-labelledby="standings-tab">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col"><span class="sr-only">Position</span>#</th>
+                <th scope="col">Player</th>
+                <th scope="col"><abbr title="Played">P</abbr></th>
+                <th scope="col"><abbr title="Won">W</abbr></th>
+                <th scope="col"><abbr title="Drawn">D</abbr></th>
+                <th scope="col"><abbr title="Lost">L</abbr></th>
+                <th scope="col"><abbr title="Goal difference">GD</abbr></th>
+                <th scope="col"><abbr title="Points">Pts</abbr></th>
+              </tr>
+            </thead>
+            <tbody id="standings-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section results-section tab-panel" id="results" role="tabpanel" aria-labelledby="results-tab" hidden>
+        <div class="results-list" id="results-list"></div>
+      </section>
+
+      <section class="section tab-panel" id="together" role="tabpanel" aria-labelledby="together-tab" hidden>
+        <div class="matrix-wrap" id="together-matrix"></div>
+      </section>
+
+      <p class="status" id="status" role="status">Loading results…</p>
+    </main>
+  </body>
+</html>
