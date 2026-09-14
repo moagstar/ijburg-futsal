@@ -675,7 +675,14 @@ document.querySelector("#lineup-suggestions").addEventListener("click", (event) 
 const requestedTab = location.hash.slice(1);
 selectTab(tabs.some((tab) => tab.dataset.tab === requestedTab) ? requestedTab : "standings", false);
 
-fetch("matches.txt")
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js", { updateViaCache: "none" })
+      .catch((error) => console.warn("Could not register the update service worker.", error));
+  });
+}
+
+fetch("matches.txt", { cache: "no-store" })
   .then((response) => {
     if (!response.ok) throw new Error("Could not load matches.txt.");
     return response.text();

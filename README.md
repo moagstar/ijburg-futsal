@@ -61,3 +61,9 @@ Then open <http://localhost:5173>.
 4. Select the `main` branch and the `/(root)` folder, then save.
 
 Every merge to `main` publishes the files directly. There is no installation, build step, or deployment workflow. A weekly pull request only needs to edit `matches.txt`.
+
+The site requests `matches.txt` without using Chrome's HTTP cache. It also uses a
+small network-first service worker for the page, stylesheet, script, and match
+data, so a normal reload picks up a completed GitHub Pages deployment. Player
+photos are revalidated too, while unchanged photos can still use the browser's
+cached copy.
