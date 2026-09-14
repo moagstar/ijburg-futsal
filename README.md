@@ -27,6 +27,18 @@ The table awards three points for a win and one for a draw. Players are ranked b
 
 The **Together** tab counts how many times every pair of players appeared on the same team. It is calculated automatically from the same match file.
 
+## Import the next Meetup roster
+
+Run the dependency-free scraper to import the registered players from the next
+Futsal IJburg Meetup event:
+
+```bash
+python3 scrape_meetup.py
+```
+
+The script updates that event's dated block in `matches.txt`, or inserts it at
+the top if it is not there yet. Existing match results are left unchanged.
+
 ## Add player photos
 
 Place each photo in the [`avatars`](avatars) folder and name it `<player name>.jpg`. The name must match `matches.txt` exactly—for example, `Daniel Bradburn.jpg`. Square images work best. Missing photos fall back to the player’s initials.
