@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f3f5f4">
+    <meta name="theme-color" content="#cbd5da">
     <meta name="description" content="Weekly results, teams and player standings for IJburg Futsal.">
     <title>IJburg Futsal</title>
     <link rel="stylesheet" href="styles.css">
@@ -18,6 +18,7 @@
         <button id="standings-tab" type="button" role="tab" aria-selected="true" aria-controls="standings" data-tab="standings">Standings</button>
         <button id="results-tab" type="button" role="tab" aria-selected="false" aria-controls="results" data-tab="results" tabindex="-1">Results</button>
         <button id="together-tab" type="button" role="tab" aria-selected="false" aria-controls="together" data-tab="together" tabindex="-1">Together</button>
+        <button id="lineups-tab" type="button" role="tab" aria-selected="false" aria-controls="lineups" data-tab="lineups" tabindex="-1">Teams</button>
       </nav>
     </header>
 
@@ -48,6 +49,44 @@
 
       <section class="section tab-panel" id="together" role="tabpanel" aria-labelledby="together-tab" hidden>
         <div class="matrix-wrap" id="together-matrix"></div>
+      </section>
+
+      <section class="section tab-panel lineup-section" id="lineups" role="tabpanel" aria-labelledby="lineups-tab" hidden>
+        <div class="lineup-heading">
+        </div>
+
+        <div class="lineup-builder">
+          <div class="picker-card">
+            <div class="picker-toolbar">
+              <div class="picker-title">
+                <h3>Available players</h3>
+                <span id="selection-count" aria-live="polite">0 selected</span>
+              </div>
+              <button class="text-button" id="clear-selection" type="button">Clear</button>
+            </div>
+            <div class="player-picker" id="player-picker"></div>
+
+            <form class="new-player-form" id="new-player-form">
+              <label for="new-player-name">Add someone new</label>
+              <div class="new-player-controls">
+                <input id="new-player-name" name="name" type="text" autocomplete="off" placeholder="Player name">
+                <button type="submit">Add player</button>
+              </div>
+              <p>New players start as <strong>Unknown</strong>: they are treated as typical and spread across the teams. Pick a rough level on their player card only when you have a useful estimate.</p>
+            </form>
+
+            <div class="builder-actions">
+              <p id="lineup-guidance">Select 10 or 12 players to generate teams.</p>
+            </div>
+          </div>
+
+          <div class="suggestions" id="lineup-suggestions" aria-live="polite">
+            <div class="empty-suggestions">
+              <span aria-hidden="true">10 / 12</span>
+              <p>Your balanced team suggestions will appear here.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <p class="status" id="status" role="status">Loading results…</p>
