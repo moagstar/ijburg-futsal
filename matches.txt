@@ -1,5 +1,9 @@
 # Add new matches at the top. Leave a blank line between matches.
 
+2026-09-09
+Red (14): Alex Smorodin, Amine Rhord, Andrea, Daniel Bradburn, Marcos, Yannis Zervos
+Blue (9): Bernard Hugh-Kong, Hassan El Azzouzi, Leonidas Rovithis, Maurizio Perino, Osman, Robin Schreur
+
 2026-09-02
 Red (10): Alex Smorodin, Daniel Bradburn, Osman, Randy Bukasa, Iarik, Marcos
 Blue (8): Andrea, Amine Rhord, Hassan El Azzouzi, Maurizio Perino, Mattia, Tiago Vieira
