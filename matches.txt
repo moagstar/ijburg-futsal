@@ -1,13 +1,21 @@
 # Add new matches at the top. Leave a blank line between matches.
 
+2026-09-23
+Red (11): Alex Smorodin, Bernard Hugh-Kong, Hassan El Azzouzi, RISHABH BANSAL, Robin Schreur
+Blue (7): Fatih Karagoz, Marcos, Martin Rutrle, Randy Bukasa, Taco
+
+2026-09-16
+Red (12): Alex Smorodin, Andrea, Bernard Hugh-Kong, Hassan El Azzouzi, Marcos, Robin Schreur
+Blue (3): Daniel Bradburn, Fatih Karagoz, iarik, Maurizio Perino, Osman, Randy Bukasa
+
 2026-09-09
 Red (14): Alex Smorodin, Amine Rhord, Andrea, Daniel Bradburn, Marcos, Yannis Zervos
 Blue (9): Bernard Hugh-Kong, Hassan El Azzouzi, Leonidas Rovithis, Maurizio Perino, Osman, Robin Schreur
 
 2026-09-02
-Red (10): Alex Smorodin, Daniel Bradburn, Osman, Randy Bukasa, Iarik, Marcos
+Red (10): Alex Smorodin, Daniel Bradburn, Osman, Randy Bukasa, iarik, Marcos
 Blue (8): Andrea, Amine Rhord, Hassan El Azzouzi, Maurizio Perino, Mattia, Tiago Vieira
 
 2026-08-26
 Red (5): Mattia, Marcos, Alex Smorodin, Robin Schreur, Hassan El Azzouzi, Tiago Vieira
-Blue (5): Iarik, samwijnans, Randy Bukasa, André Alves, Fatih Karagoz, Maurizio Perino
+Blue (5): iarik, samwijnans, Randy Bukasa, André Alves, Fatih Karagoz, Maurizio Perino
