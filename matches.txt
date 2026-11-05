@@ -1,5 +1,9 @@
 # Add new matches at the top. Leave a blank line between matches.
 
+2026-11-04
+Red (12): Andrea, André Alves, Hassan El Azzouzi, Leonidas Rovithis, Martin Rutrle, Maurizio Perino
+Blue (8): Ahmed, Daniel Bradburn, James, Mattia, Robin Schreur, Yannis Zervos
+
 2026-10-28
 Red (12): Ahmed, Daniel Bradburn, Rayan, Mattia, Nik, Yannis Zervos
 Blue (11): Andrea, André Alves, Berke, Fatih Karagoz, Marcos, Martin Rutrle
