@@ -1,5 +1,9 @@
 # Add new matches at the top. Leave a blank line between matches.
 
+2026-11-25
+Red (12): Andrea, Daniel Bradburn, James, Leonidas Rovithis, Maurizio Perino, Randy Bukasa
+Blue (9): Ahmed, André Alves, Bernard Hugh-Kong, Fatih Karagoz, Iarik, Robin Schreur
+
 2026-11-18
 Red (11): André Alves, Daniel Bradburn, Iarik, James, Leonidas Rovithis, Marcos
 Blue (9): Fatih Karagoz, Hassan El Azzouzi, Manzur Mukhitdinov, Mattia, Randy Bukasa, Yannis Zervos
