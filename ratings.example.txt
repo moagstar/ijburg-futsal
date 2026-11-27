@@ -1,0 +1,9 @@
+# Example only - made-up names. Copy to ratings.txt (git-ignored) or paste
+# into the PLAYER_RATINGS secret. Never commit real ratings to this repo.
+#
+# name | position (defender, striker, allrounder) | tier (1 best .. 4, decimals like 2.5 allowed) | never with
+Jane Example  | defender   | 2 | John Sample
+New Player    | 3
+# short form above: name | tier  (position then counts as allrounder)
+John Sample   | striker    | 1 |
+Alex Placeholder | allrounder | 3 |

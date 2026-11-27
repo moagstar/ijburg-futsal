@@ -167,7 +167,12 @@ def graphql_url(events_url: str) -> str:
     return f"{parsed.scheme}://{parsed.netloc}/gql2"
 
 
-def fetch_registered_players(endpoint: str, event_id: str) -> tuple[dict[str, Any], list[str]]:
+def fetch_registered_players(
+    endpoint: str,
+    event_id: str,
+    statuses: tuple[str, ...] = ("YES", "ATTENDED"),
+    allow_empty: bool = False,
+) -> tuple[dict[str, Any], list[str]]:
     players: list[str] = []
     seen_member_ids: set[str] = set()
     after: str | None = None
@@ -181,7 +186,7 @@ def fetch_registered_players(endpoint: str, event_id: str) -> tuple[dict[str, An
                 "eventId": event_id,
                 "first": RSVPS_PER_PAGE,
                 "after": after,
-                "filter": {"rsvpStatus": ["YES", "ATTENDED"]},
+                "filter": {"rsvpStatus": list(statuses)},
             },
         }
         result = request_json(endpoint, payload)
@@ -211,7 +216,7 @@ def fetch_registered_players(endpoint: str, event_id: str) -> tuple[dict[str, An
         if not after:
             raise ScrapeError("Meetup indicated another RSVP page but returned no cursor")
 
-    if event is None or not players:
+    if event is None or (not players and not allow_empty):
         raise ScrapeError(f"No registered players found for event {event_id}")
     return event, players
 

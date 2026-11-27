@@ -124,6 +124,9 @@ function renderTeamName(name) {
   return escapeHtml(name);
 }
 
+// Photos that failed to load once are not requested again when lists re-render.
+const missingAvatars = new Set();
+
 function renderAvatar(name) {
   const initials = name
     .trim()
@@ -132,11 +135,12 @@ function renderAvatar(name) {
     .map((part) => part[0])
     .join("")
     .toUpperCase();
-  const fileName = encodeURIComponent(`${name}.jpg`);
+  const source = `avatars/${encodeURIComponent(`${name}.jpg`)}`;
+  const missing = missingAvatars.has(source);
 
   return `
-    <span class="avatar" aria-hidden="true">
-      <img src="avatars/${fileName}" alt="" loading="lazy">
+    <span class="avatar${missing ? " avatar-missing" : ""}" aria-hidden="true">
+      ${missing ? "" : `<img src="${source}" alt="" loading="lazy" decoding="async">`}
       <span class="avatar-fallback">${escapeHtml(initials)}</span>
     </span>
   `;
@@ -307,7 +311,10 @@ function generateSuggestions(names, count = 3) {
 
 function wireAvatarFallbacks(scope = document) {
   scope.querySelectorAll(".avatar img").forEach((image) => {
-    image.addEventListener("error", () => image.parentElement.classList.add("avatar-missing"), { once: true });
+    image.addEventListener("error", () => {
+      missingAvatars.add(image.getAttribute("src"));
+      image.parentElement.classList.add("avatar-missing");
+    }, { once: true });
   });
 }
 
@@ -354,6 +361,8 @@ function updateSelectionState(message = "") {
   const count = lineupState.selected.size;
   document.querySelector("#selection-count").textContent = `${count} selected`;
   const guidance = document.querySelector("#lineup-guidance");
+
+  document.querySelector("#jump-to-teams").hidden = count !== 10 && count !== 12;
 
   if (message) guidance.textContent = message;
   else if (count < 10) guidance.textContent = `Select ${10 - count} more for a 10-player game.`;
@@ -434,7 +443,11 @@ async function copyLineup(button) {
     textarea.remove();
   }
   button.textContent = "Copied";
-  setTimeout(() => { button.textContent = "Copy teams"; }, 1400);
+  button.classList.add("is-copied");
+  setTimeout(() => {
+    button.textContent = "Copy teams";
+    button.classList.remove("is-copied");
+  }, 1400);
 }
 
 function initializeLineupBuilder(matches, standings, upcoming) {
@@ -539,7 +552,7 @@ function render(matches, upcoming) {
             </ul>
           </div>
           <div class="match-score" aria-label="${teams[0].score} to ${teams[1].score}">
-            <strong>${teams[0].score}</strong><span>–</span><strong>${teams[1].score}</strong>
+            <strong${teams[0].score < teams[1].score ? ' class="score-lost"' : ""}>${teams[0].score}</strong><span>–</span><strong${teams[1].score < teams[0].score ? ' class="score-lost"' : ""}>${teams[1].score}</strong>
           </div>
           <div class="team-b">
             <h3>${renderTeamName(teams[1].name)}</h3>
@@ -556,8 +569,99 @@ function render(matches, upcoming) {
 
   wireAvatarFallbacks();
   initializeLineupBuilder(matches, standings, upcoming);
+  loadSchedule(matches);
 
   document.querySelector("#status")?.remove();
+}
+
+function localIsoDate(date = new Date()) {
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function parseSchedule(text) {
+  return text.split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((date) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error(`Invalid schedule date: ${date}`);
+      return { date };
+    })
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function daysUntil(date, today) {
+  return Math.round((new Date(`${date}T12:00:00`) - new Date(`${today}T12:00:00`)) / 86400000);
+}
+
+function renderSchedule(games, matches, today = localIsoDate()) {
+  const container = document.querySelector("#schedule-list");
+  const results = new Map(matches.map((match) => [match.date, match]));
+  const next = games.find((game) => game.date >= today);
+  const played = games.filter((game) => game.date < today).length;
+  const weekday = (date) => new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(new Date(`${date}T12:00:00`));
+  const dayMonth = (date) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" }).format(new Date(`${date}T12:00:00`));
+  const monthLabel = (date) => new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" }).format(new Date(`${date}T12:00:00`));
+
+  let summary;
+  if (next) {
+    const days = daysUntil(next.date, today);
+    const when = days === 0 ? "Today" : days === 1 ? "Tomorrow" : `In ${days} days`;
+    summary = `
+      <div class="schedule-next">
+        <span class="schedule-next-label">Next game</span>
+        <strong>${escapeHtml(formatDate(next.date))}</strong>
+        <span class="schedule-next-when">${when}</span>
+      </div>`;
+  } else {
+    summary = `<div class="schedule-next"><span class="schedule-next-label">Season finished</span><strong>See you next season</strong></div>`;
+  }
+
+  const months = [];
+  games.forEach((game) => {
+    const label = monthLabel(game.date);
+    if (!months.length || months.at(-1).label !== label) months.push({ label, games: [] });
+    months.at(-1).games.push(game);
+  });
+
+  container.innerHTML = `
+    ${summary}
+    <p class="schedule-progress">${played} of ${games.length} played · ${games.length - played} to go</p>
+    ${months.map(({ label, games: monthGames }) => `
+      <section class="schedule-month" aria-label="${escapeHtml(label)}">
+        <h3>${escapeHtml(label)}</h3>
+        <ol>
+          ${monthGames.map((game) => {
+            const past = game.date < today;
+            const isNext = next && game.date === next.date;
+            const match = results.get(game.date);
+            const score = match ? `${match.teams[0].score}–${match.teams[1].score}` : "";
+            const state = isNext ? (game.date === today ? "Today" : "Next") : "";
+            return `
+              <li class="schedule-game${past ? " is-past" : ""}${isNext ? " is-next" : ""}"${isNext ? ' aria-current="date"' : ""}>
+                <time datetime="${game.date}"><span>${weekday(game.date)}</span> ${dayMonth(game.date)}</time>
+                ${past ? `<span class="schedule-result">${score ? `<span class="sr-only">Played, </span>${score}` : "Played"}</span>` : ""}
+                ${state ? `<span class="schedule-badge">${state}</span>` : ""}
+              </li>`;
+          }).join("")}
+        </ol>
+      </section>
+    `).join("")}
+  `;
+}
+
+function loadSchedule(matches) {
+  fetch("schedule.txt", { cache: "no-store" })
+    .then((response) => {
+      if (!response.ok) throw new Error("Could not load schedule.txt.");
+      return response.text();
+    })
+    .then((text) => renderSchedule(parseSchedule(text), matches))
+    .catch((error) => {
+      console.error(error);
+      document.querySelector("#schedule-list").innerHTML =
+        '<p class="schedule-empty is-error">The schedule could not be loaded.</p>';
+    });
 }
 
 const tabs = [...document.querySelectorAll('[role="tab"]')];
@@ -657,6 +761,12 @@ document.querySelector("#new-player-form").addEventListener("submit", (event) =>
   refreshSuggestions();
 });
 
+document.querySelector("#jump-to-teams").addEventListener("click", () => {
+  const suggestions = document.querySelector("#lineup-suggestions");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  suggestions.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+});
+
 document.querySelector("#clear-selection").addEventListener("click", () => {
   lineupState.selected.clear();
   renderPlayerPicker();
@@ -694,6 +804,7 @@ fetch("matches.txt", { cache: "no-store" })
   })
   .catch((error) => {
     console.error(error);
-    document.querySelector("#status").textContent =
-      "The match file has a formatting error. Please check the latest entry.";
+    const status = document.querySelector("#status");
+    status.classList.add("is-error");
+    status.textContent = "The match file has a formatting error. Please check the latest entry.";
   });

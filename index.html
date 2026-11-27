@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#cbd5da">
     <meta name="description" content="Weekly results, teams and player standings for IJburg Futsal.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="IJburg Futsal">
+    <meta property="og:title" content="IJburg Futsal">
+    <meta property="og:description" content="Weekly results, teams and player standings for IJburg Futsal.">
+    <meta property="og:url" content="https://moagstar.github.io/ijburg-futsal/">
     <title>IJburg Futsal</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js?v=cache-fix-1" defer></script>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Graduate&amp;display=swap">
+    <link rel="stylesheet" href="styles.css?v=schedule-1">
+    <script src="script.js?v=schedule-1" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -19,10 +28,13 @@
         <button id="results-tab" type="button" role="tab" aria-selected="false" aria-controls="results" data-tab="results" tabindex="-1">Results</button>
         <button id="together-tab" type="button" role="tab" aria-selected="false" aria-controls="together" data-tab="together" tabindex="-1">Together</button>
         <button id="lineups-tab" type="button" role="tab" aria-selected="false" aria-controls="lineups" data-tab="lineups" tabindex="-1">Teams</button>
+        <button id="schedule-tab" type="button" role="tab" aria-selected="false" aria-controls="schedule" data-tab="schedule" tabindex="-1">Schedule</button>
       </nav>
     </header>
 
     <main>
+      <p class="status" id="status" role="status"><span class="status-ball" aria-hidden="true"></span>Loading results…</p>
+
       <section class="section tab-panel" id="standings" role="tabpanel" aria-labelledby="standings-tab">
         <div class="table-wrap">
           <table>
@@ -51,10 +63,11 @@
         <div class="matrix-wrap" id="together-matrix"></div>
       </section>
 
-      <section class="section tab-panel lineup-section" id="lineups" role="tabpanel" aria-labelledby="lineups-tab" hidden>
-        <div class="lineup-heading">
-        </div>
+      <section class="section tab-panel schedule-section" id="schedule" role="tabpanel" aria-labelledby="schedule-tab" hidden>
+        <div class="schedule" id="schedule-list"><p class="schedule-empty">Loading the schedule…</p></div>
+      </section>
 
+      <section class="section tab-panel lineup-section" id="lineups" role="tabpanel" aria-labelledby="lineups-tab" hidden>
         <div class="lineup-builder">
           <div class="picker-card">
             <div class="picker-toolbar">
@@ -62,7 +75,10 @@
                 <h3>Available players</h3>
                 <span id="selection-count" aria-live="polite">0 selected</span>
               </div>
-              <button class="text-button" id="clear-selection" type="button">Clear</button>
+              <div class="picker-actions">
+                <button class="jump-to-teams" id="jump-to-teams" type="button" hidden>See teams <span aria-hidden="true">↓</span></button>
+                <button class="text-button" id="clear-selection" type="button">Clear</button>
+              </div>
             </div>
             <div class="player-picker" id="player-picker"></div>
 
@@ -88,8 +104,6 @@
           </div>
         </div>
       </section>
-
-      <p class="status" id="status" role="status">Loading results…</p>
     </main>
   </body>
 </html>

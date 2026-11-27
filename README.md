@@ -39,6 +39,45 @@ python3 scrape_meetup.py
 The script updates that event's dated block in `matches.txt`, or inserts it at
 the top if it is not there yet. Existing match results are left unchanged.
 
+## Season schedule
+
+The **Schedule** tab reads [`schedule.txt`](schedule.txt): one game date per line
+(`YYYY-MM-DD`). Past dates are crossed out automatically (with the score when
+the match is in `matches.txt`) and the next game is highlighted at the top.
+
+## Suggest teams with private ratings
+
+`make_teams.py` suggests three balanced Red/Blue splits for the upcoming player
+list in `matches.txt` (or `--players "A, B, ..."`), each with a WhatsApp share
+link. It first splits "never play together" pairs, then spreads defenders and
+strikers, then evens out total strength from the private tiers, and finally uses
+the same result-based checks as the website. Because of the private ratings it
+can suggest different teams than the website's team picker.
+
+```bash
+python3 make_teams.py --players "Jane Example, John Sample, ..."
+python3 make_teams.py --json   # teams and WhatsApp links for a scheduler
+python3 -m unittest test_make_teams
+```
+
+The ratings are private. Keep them out of this public repository: put them in a
+git-ignored `ratings.txt` locally, or in a `PLAYER_RATINGS` secret on a
+scheduler. See [`ratings.example.txt`](ratings.example.txt) for the format.
+
+## Check for enough players
+
+`sunday_check.py` reads the next Meetup event and reports how many players are
+going and on the waitlist. If fewer than the event's limit (usually 12) are
+going, it suggests this season's regular players (season start from
+`schedule.txt`) who have not signed up yet, with a WhatsApp message and the
+Meetup sign-up link.
+
+```bash
+python3 sunday_check.py          # summary
+python3 sunday_check.py --json   # for a scheduled email
+python3 -m unittest test_sunday_check
+```
+
 ## Add player photos
 
 Place each photo in the [`avatars`](avatars) folder and name it `<player name>.jpg`. The name must match `matches.txt` exactly—for example, `Daniel Bradburn.jpg`. Square images work best. Missing photos fall back to the player’s initials.
